@@ -2,6 +2,8 @@
 
 Simple local memory for OpenCode that works in terminal-based CLI/IDE sessions.
 
+Current Version: `0.1.1`
+
 ## 1) Title and Description
 
 - **Title:** OpenCode Memory Hub
