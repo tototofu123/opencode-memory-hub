@@ -132,3 +132,5 @@ git push origin <your-branch>
 - `safety-guard` plugin blocks destructive shell commands (`rm -rf`, `git reset --hard`, etc.).
 - File edits/writes are restricted to the current project/worktree scope.
 - Large single writes are blocked; use smaller incremental edits.
+- Additional Windows-safe patterns are blocked (`rmdir /s`, `del /s`, `Remove-Item -Recurse/-Force`).
+- Path checks use normalized absolute paths to reduce bypass risk.
