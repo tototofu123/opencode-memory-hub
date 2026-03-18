@@ -259,7 +259,7 @@ export const MemoryPlugin = async () => {
 
           entries.push(entry)
           await writeJson(memoryFile, { entries })
-          return `Saved memory #${entry.id}: ${entry.title}`
+          return `✅ Saved #${entry.id} | ${entry.title}`
         },
       }),
 
