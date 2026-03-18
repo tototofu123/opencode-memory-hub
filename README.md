@@ -4,6 +4,8 @@ Simple local memory for OpenCode that works in terminal-based CLI/IDE sessions.
 
 Current Version: `0.1.1`
 
+Safety Mode: `enabled` (destructive shell commands blocked; file edits scoped to project)
+
 ## 1) Title and Description
 
 - **Title:** OpenCode Memory Hub
@@ -124,3 +126,9 @@ git push origin <your-branch>
 
 - This implementation is project-local. If you want global memory across projects, we can add a global plugin/data path next.
 - Maintainer-only pre-push privacy checks are in `MAINTAINER-CHECKLIST.md`.
+
+## Safety Guard
+
+- `safety-guard` plugin blocks destructive shell commands (`rm -rf`, `git reset --hard`, etc.).
+- File edits/writes are restricted to the current project/worktree scope.
+- Large single writes are blocked; use smaller incremental edits.

@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["./.opencode/plugins/memory-plugin.js"],
+  "plugin": ["./.opencode/plugins/safety-guard.js", "./.opencode/plugins/memory-plugin.js"],
   "command": {
     "memory-save": {
       "description": "Save a memory entry",
