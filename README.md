@@ -121,3 +121,4 @@ git push origin <your-branch>
 ## Notes
 
 - This implementation is project-local. If you want global memory across projects, we can add a global plugin/data path next.
+- Maintainer-only pre-push privacy checks are in `MAINTAINER-CHECKLIST.md`.

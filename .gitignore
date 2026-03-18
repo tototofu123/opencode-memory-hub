@@ -3,3 +3,4 @@ node_modules/
 .opencode/data/preferences.json
 .env
 .env.*
+session-log/
