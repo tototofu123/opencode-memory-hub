@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["./.opencode/plugins/memory-plugin.js"],
+  "command": {
+    "memory-save": {
+      "description": "Save a memory entry",
+      "template": "Use memory_add with fields from $ARGUMENTS. Expected format: title:<text> category:<text> tags:<comma,separated> content:<text>. If essentials are missing, ask only for missing values."
+    },
+    "memory-list": {
+      "description": "List or load memory entries",
+      "template": "Use memory_search and memory_list together. Rules: if args are empty, call memory_list(limit=20). If args include id:<number>, call memory_search with that id and mode=all. If args include '--mode all|summary', pass mode. If args include category:<name>, pass category. Remaining text is query. Default limit=8 for search."
+    },
+    "memory-setting": {
+      "description": "Get or set memory defaults",
+      "template": "Use memory_get_preference when args are empty. If args contain summary|all|off set default via memory_set_preference. Return current/default mode clearly."
+    }
+  },
+  "permission": {
+    "skill": {
+      "memory-*": "allow"
+    }
+  }
+}

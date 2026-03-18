@@ -1,0 +1,16 @@
+{
+  "name": "opencode-memory-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "version:check": "node ./scripts/version-bump.mjs --dry-run",
+    "version:bump": "node ./scripts/version-bump.mjs",
+    "version:major": "node ./scripts/version-bump.mjs --level=major",
+    "version:intermediate": "node ./scripts/version-bump.mjs --level=intermediate",
+    "version:small": "node ./scripts/version-bump.mjs --level=small"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "1.2.27"
+  }
+}

@@ -1,0 +1,5 @@
+node_modules/
+.opencode/data/memory.json
+.opencode/data/preferences.json
+.env
+.env.*
