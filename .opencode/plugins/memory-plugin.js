@@ -242,15 +242,45 @@ export const MemoryPlugin = async () => {
           const { memoryFile } = dataPaths(context.directory)
           const db = await readJson(memoryFile, { entries: [] })
           const entries = Array.isArray(db.entries) ? db.entries : []
-          const nextID = entries.length ? Math.max(...entries.map((e) => Number(e.id) || 0)) + 1 : 1
           const now = new Date().toISOString()
+          const title = args.title.trim()
+          const category = (args.category || "general").trim()
+          const content = args.content.trim()
+          const tags = normalizeTags(args.tags)
+
+          const titleLower = title.toLowerCase()
+          const contentTokens = similarityTokens({ title, content })
+          const existingIndex = entries.findIndex((e) => {
+            const sameTitle = String(e.title || "").trim().toLowerCase() === titleLower
+            const sameContent = String(e.content || "").trim() === content
+            const sim = jaccard(contentTokens, similarityTokens(e))
+            const closeMatch = sim >= 0.9
+            return sameTitle || sameContent || closeMatch
+          })
+
+          if (existingIndex >= 0) {
+            const current = entries[existingIndex]
+            const mergedTags = [...new Set([...(current.tags || []), ...tags])]
+            current.title = title
+            current.category = category
+            current.tags = mergedTags
+            current.content = content
+            current.source_session = context.sessionID
+            current.source_directory = context.directory
+            current.updated_at = now
+            entries[existingIndex] = current
+            await writeJson(memoryFile, { entries })
+            return `🔁 Updated #${current.id} | ${current.title}`
+          }
+
+          const nextID = entries.length ? Math.max(...entries.map((e) => Number(e.id) || 0)) + 1 : 1
 
           const entry = {
             id: nextID,
-            title: args.title.trim(),
-            category: (args.category || "general").trim(),
-            tags: normalizeTags(args.tags),
-            content: args.content.trim(),
+            title,
+            category,
+            tags,
+            content,
             source_session: context.sessionID,
             source_directory: context.directory,
             created_at: now,

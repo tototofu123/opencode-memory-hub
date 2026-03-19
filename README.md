@@ -2,7 +2,7 @@
 
 Simple local memory for OpenCode that works in terminal-based CLI/IDE sessions.
 
-Current Version: `0.1.1`
+Current Version: `0.4.1`
 
 Safety Mode: `enabled` (destructive shell commands blocked; file edits scoped to project)
 
