@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["./.opencode/plugins/safety-guard.js", "./.opencode/plugins/memory-plugin.js", "./.opencode/plugins/auto-readme-plugin.js", "../opencode memory compress extract/.opencode/plugins/memory-hub-plugin.js"],
+  "plugin": ["./.opencode/plugins/safety-guard.js", "./.opencode/plugins/memory-plugin.js", "../opencode memory compress extract/.opencode/plugins/memory-hub-plugin.js"],
   "command": {
     "memory-save": {
       "description": "Save a memory entry",
@@ -29,10 +29,6 @@
     "task-save": {
       "description": "Save current task progress to memory (auto-save)",
       "template": "Use memory_add to save task progress. Category: session-state. Tags: auto-save, task-progress. Content: Brief summary of completed work and remaining tasks (max 500 chars)."
-    },
-    "update-readme": {
-      "description": "Auto-generate or update README.md based on repo structure",
-      "template": "Use generate_readme tool. If args include --dry-run, pass dry_run:true. Otherwise generate and write README.md. Report what was detected (commands, skills, files)."
     }
   },
   "permission": {
