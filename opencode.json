@@ -25,6 +25,10 @@
     "memory-compress-save": {
       "description": "Compress and save text as a memory entry in one step",
       "template": "Use memory_compress_save with title and content. Optional: category, tags, level."
+    },
+    "task-save": {
+      "description": "Save current task progress to memory (auto-save)",
+      "template": "Use memory_add to save task progress. Category: session-state. Tags: auto-save, task-progress. Content: Brief summary of completed work and remaining tasks (max 500 chars)."
     }
   },
   "permission": {

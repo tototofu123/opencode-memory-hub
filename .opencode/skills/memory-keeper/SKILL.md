@@ -1,6 +1,6 @@
 ---
 name: memory-keeper
-description: Save text to memory and load past memory with concise or full context
+description: Save text to memory and load past memory with concise or full context. Includes auto-save for long tasks and numbered task progress tracking.
 license: MIT
 compatibility: opencode
 metadata:
@@ -15,6 +15,8 @@ metadata:
 - Return concise summaries by default, and full context when requested.
 - Auto-compress large content (>5000 chars) on save.
 - Auto-extract compressed content on load when viewing full content.
+- Auto-save memory during long-duration tasks via token-efficient subagent.
+- Track numbered task completions with emoji notifications and git commits.
 
 ## When to use me
 
@@ -44,3 +46,32 @@ metadata:
 ### Explicit compress/extract (rarely needed)
 - `memory_compress(text)` - get compressed base64 string
 - `memory_extract(compressed)` - restore original text
+
+## Dynamic auto-save integration
+
+When `task-workflow` skill triggers auto-save:
+- Save location: current session context
+- Category: `session-state` (for task progress)
+- Tags should include: `auto-save`, `task-progress`, current phase name
+- Content: Concise summary (max 500 chars) of:
+  - What was completed
+  - What remains to do
+  - Current file/changes being worked on
+
+### Auto-save triggers
+- After ~2 minutes of continuous work on multi-item tasks
+- After completing each significant sub-task in a numbered list
+- When user explicitly requests "save progress"
+
+### Dynamic timing rules
+- Simple task (1-2 items): Skip auto-save
+- Medium task (3-4 items): Save after 1st completion
+- Complex task (5+ items): Save every 2 completions
+- Task complexity affects save frequency
+
+## Integration with task-workflow
+
+task-workflow triggers memory saves at optimal moments:
+- Prefers concise summaries (180 chars default)
+- Uses session-state category for task progress
+- Provides tags that enable easy retrieval via memory_list

@@ -2,14 +2,14 @@
 
 Simple local memory for OpenCode that works in terminal-based CLI/IDE sessions.
 
-Current Version: `0.4.1`
+Current Version: `0.5.0`
 
 Safety Mode: `enabled` (destructive shell commands blocked; file edits scoped to project)
 
 ## 1) Title and Description
 
 - **Title:** OpenCode Memory Hub
-- **Description:** A project-local memory layer that lets you save and retrieve past session knowledge with `/memory-save`, `/memory-list`, and `/memory-setting`.
+- **Description:** A project-local memory layer that lets you save and retrieve past session knowledge with `/memory-save`, `/memory-list`, `/memory-setting`, and `/task-save`. Includes task-workflow automation for numbered tasks and auto-save.
 
 ## 2) What It Does
 
@@ -40,9 +40,14 @@ opencode memory hub/
 │  ├─ commands/
 │  │  ├─ memory-save.md
 │  │  ├─ memory-list.md
-│  │  └─ memory-setting.md
+│  │  ├─ memory-setting.md
+│  │  └─ task-save.md
 │  ├─ skills/
-│  │  └─ memory-keeper/
+│  │  ├─ memory-keeper/
+│  │  │  └─ SKILL.md
+│  │  ├─ task-workflow/
+│  │  │  └─ SKILL.md
+│  │  └─ build-mode-reminder/
 │  │     └─ SKILL.md
 │  └─ data/
 │     └─ .gitkeep
@@ -92,6 +97,27 @@ opencode
 - `/memory-setting` (show current)
 - `/memory-setting summary|all|mixed|off`
 - `/memory-setting mixed recent:3 tokens:900`
+- `/task-save` (save current task progress for auto-save)
+
+## Task Workflow Features
+
+### Numbered Task Completion
+When you list tasks as numbered items (1. 2. 3. or 1) 2) 3)), the task-workflow skill:
+- Sends emoji notifications on completion (:one: :two: :three: etc.)
+- Auto-commits changes with descriptive messages
+- Optionally pushes if it's a meaningful completion point
+
+### Auto-Save Memory
+During long tasks (3+ sub-items):
+- Memory is automatically saved every ~2 minutes of work
+- Uses session-state category for task progress
+- Dynamic timing based on task complexity:
+  - Medium task (3-4 items): Save after 1st completion
+  - Complex task (5+ items): Save every 2 completions
+- Token-efficient: Uses minimal prompt for subagent calls
+
+### Commands
+- `/task-save` - Manually save current task progress
 
 ## Before Git Push
 
