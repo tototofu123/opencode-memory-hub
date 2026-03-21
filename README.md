@@ -1,162 +1,75 @@
-# OpenCode Memory Hub
+# memory-hub
 
-Simple local memory for OpenCode that works in terminal-based CLI/IDE sessions.
+memory-hub - OpenCode plugin
 
-Current Version: `0.5.0`
+Current Version: `0.6.0`
 
-Safety Mode: `enabled` (destructive shell commands blocked; file edits scoped to project)
+## Commands
 
-## 1) Title and Description
+- `/memory-list` - List or load memory entries
+- `/memory-save` - Save a memory entry (title/category/tags/content)
+- `/memory-setting` - Get or set default memory mode
+- `/task-save` - Save current task progress to memory (auto-save)
+- `/update-readme` - Auto-generate or update README.md based on repo structure
 
-- **Title:** OpenCode Memory Hub
-- **Description:** A project-local memory layer that lets you save and retrieve past session knowledge with `/memory-save`, `/memory-list`, `/memory-setting`, and `/task-save`. Includes task-workflow automation for numbered tasks and auto-save.
+## Skills
 
-## 2) What It Does
+- **auto-readme**: Auto-generate and update README.md based on repo structure, skills, commands, and git changes
+- **build-mode-reminder**: Save and load the exact build mode system-reminder text in memory
+- **memory-keeper**: Save text to memory and load past memory with concise or full context. Includes auto-save for long tasks and numbered task progress tracking.
+- **task-workflow**: Smart task tracking with auto-commit, progress notifications, and dynamic memory saves
 
-- Stores memory entries locally in `.opencode/data/memory.json`.
-- Retrieves relevant past entries by keyword/category (default: summary mode) with ranked top results.
-- Supports full content mode when needed.
-- Saves default load preference (`summary`, `all`, `mixed`, or `off`) in `.opencode/data/preferences.json`.
-- Supports `mixed` mode: summary list + a few recent full entries within token budget.
-
-`/memory-list` behavior:
-- No args: sequential sections (global recent 10, current-dir recent 2, path-related recent 1).
-- Query args: returns top ranked hits (default top 3, or best only).
-- Each hit is formatted as two lines: header + summary/latest.
-- Similar near-duplicate entries are collapsed automatically to reduce repeated output.
-
-## 3) Tree Map
+## File Structure
 
 ```text
-opencode memory hub/
-├─ README.md
-├─ package.json
-├─ .gitignore
-├─ TEST-QUESTIONS.md
-├─ opencode.json
-├─ .opencode/
-│  ├─ plugins/
-│  │  └─ memory-plugin.js
-│  ├─ commands/
-│  │  ├─ memory-save.md
-│  │  ├─ memory-list.md
-│  │  ├─ memory-setting.md
-│  │  └─ task-save.md
-│  ├─ skills/
-│  │  ├─ memory-keeper/
-│  │  │  └─ SKILL.md
-│  │  ├─ task-workflow/
-│  │  │  └─ SKILL.md
-│  │  └─ build-mode-reminder/
-│  │     └─ SKILL.md
-│  └─ data/
-│     └─ .gitkeep
-└─ session-log/
-   ├─ 2026-03-18-opencode-memory-hub-planning.md
-   └─ 2026-03-18-full-conversation-transcript.md
+memory-hub/
+.gitignore
+.opencode/
+   .opencode/commands/
+      .opencode/commands/memory-list.md
+      .opencode/commands/memory-save.md
+      .opencode/commands/memory-setting.md
+      .opencode/commands/task-save.md
+      .opencode/commands/update-readme.md
+   .opencode/plugins/
+      .opencode/plugins/auto-readme-plugin.js
+      .opencode/plugins/memory-plugin.js
+      .opencode/plugins/safety-guard.js
+   .opencode/skills/
+      .opencode/skills/auto-readme/
+         .opencode/skills/auto-readme/SKILL.md
+      .opencode/skills/build-mode-reminder/
+         .opencode/skills/build-mode-reminder/SKILL.md
+      .opencode/skills/memory-keeper/
+         .opencode/skills/memory-keeper/SKILL.md
+      .opencode/skills/task-workflow/
+         .opencode/skills/task-workflow/SKILL.md
+bun.lock
+MAINTAINER-CHECKLIST.md
+opencode.json
+package.json
+README.md
+scripts/
+   scripts/version-bump.mjs
+TEST-QUESTIONS.md
+VERSIONING.md
 ```
 
-## 4) Tech Stack
+## Scripts
 
-- JavaScript (ESM)
-- OpenCode plugin API (`@opencode-ai/plugin`)
-- Local JSON storage (no external DB required)
-- OpenCode custom commands (`.opencode/commands/*.md`)
-- OpenCode skills (`.opencode/skills/*/SKILL.md`)
+- `version:check`: `node ./scripts/version-bump.mjs --dry-run`
+- `version:bump`: `node ./scripts/version-bump.mjs`
+- `version:major`: `node ./scripts/version-bump.mjs --level=major`
+- `version:intermediate`: `node ./scripts/version-bump.mjs --level=intermediate`
+- `version:small`: `node ./scripts/version-bump.mjs --level=small`
 
 ## Quick Start
 
-1. Install dependency:
-
 ```bash
 bun install
-```
-
-2. Start OpenCode in this folder:
-
-```bash
 opencode
 ```
 
-3. Try commands in chat:
+## Latest Update
 
-- `/memory-save`
-- `/memory-list auth`
-- `/memory-list id:1`
-- `/memory-setting summary`
-
-## Command Reference
-
-- `/memory-save title:<text> category:<text> tags:<comma,separated> content:<text>`
-- `/memory-list` (global 10 + current-dir 2 + related 1)
-- `/memory-list <query>` (ranked top 3)
-- `/memory-list <query> --best`
-- `/memory-list <query> --top 5`
-- `/memory-list id:<n>`
-- `/memory-list category:<name> --mode summary|all|mixed`
-- `/memory-setting` (show current)
-- `/memory-setting summary|all|mixed|off`
-- `/memory-setting mixed recent:3 tokens:900`
-- `/task-save` (save current task progress for auto-save)
-
-## Task Workflow Features
-
-### Numbered Task Completion
-When you list tasks as numbered items (1. 2. 3. or 1) 2) 3)), the task-workflow skill:
-- Sends emoji notifications on completion (:one: :two: :three: etc.)
-- Auto-commits changes with descriptive messages
-- Optionally pushes if it's a meaningful completion point
-
-### Auto-Save Memory
-During long tasks (3+ sub-items):
-- Memory is automatically saved every ~2 minutes of work
-- Uses session-state category for task progress
-- Dynamic timing based on task complexity:
-  - Medium task (3-4 items): Save after 1st completion
-  - Complex task (5+ items): Save every 2 completions
-- Token-efficient: Uses minimal prompt for subagent calls
-
-### Commands
-- `/task-save` - Manually save current task progress
-
-## Before Git Push
-
-1. Restart OpenCode once so latest command/plugin changes are loaded.
-2. Smoke test commands:
-   - `/memory-save title:Push Check category:ops tags:test content:ready to push`
-   - `/memory-list`
-   - `/memory-list push --best`
-   - `/memory-setting`
-3. Verify local files:
-   - `.opencode/plugins/memory-plugin.js`
-   - `.opencode/commands/memory-save.md`
-   - `.opencode/commands/memory-list.md`
-   - `.opencode/commands/memory-setting.md`
-   - `README.md`
-4. Push:
-
-```bash
-git add .
-git commit -m "feat: add memory hub plugin and command workflow"
-git push origin <your-branch>
-```
-
-## Versioning
-
-- This repo uses `x.y.z`.
-- Use `bun run version:check` to preview bump level.
-- Use `bun run version:bump` to auto-bump version.
-- See full policy in `VERSIONING.md`.
-
-## Notes
-
-- This implementation is project-local. If you want global memory across projects, we can add a global plugin/data path next.
-- Maintainer-only pre-push privacy checks are in `MAINTAINER-CHECKLIST.md`.
-
-## Safety Guard
-
-- `safety-guard` plugin blocks destructive shell commands (`rm -rf`, `git reset --hard`, etc.).
-- File edits/writes are restricted to the current project/worktree scope.
-- Large single writes are blocked; use smaller incremental edits.
-- Additional Windows-safe patterns are blocked (`rmdir /s`, `del /s`, `Remove-Item -Recurse/-Force`).
-- Path checks use normalized absolute paths to reduce bypass risk.
+`affa4a7` - feat: add auto-readme skill and plugin for auto-generating README.md
